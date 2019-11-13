@@ -22,19 +22,19 @@ class App extends Component {
     }
   }
 
-  componentDidMount = () => {
-    let data = localStorage.getItem('history') ? JSON.parse(localStorage.getItem('history')) : [];
-    this.setState({searchHistory: data});
-  }
-
   getWeather=async(e)=>{
+  
+    // let state = Object.assign({}, this.state)
+    console.log('inside get', this.state);
     e.preventDefault();
+    //console.log("hello", e);
     const searchParam=e.target.elements.param.value;
     const lat=e.target.elements.lat.value;
     const long=e.target.elements.long.value;
-    const searchType=e.target.elements.type.value;
+    //const zipcode=e.target.elements.zipcode.value;
+    const searchType=e.target.elements.type.value;//this.state.value;
     let countryCode='IN';
-    //console.log(searchParam+'--'+searchType);
+    console.log(searchParam+'--'+searchType);
     let searchAPI="";
     if(searchType==="name"){
       searchAPI=`http://api.openweathermap.org/data/2.5/weather?q=${searchParam}&appid=${API_KEY}&units=metric`;
@@ -43,24 +43,30 @@ class App extends Component {
     }else{
       searchAPI=`http://api.openweathermap.org/data/2.5/weather?zip=${searchParam},${countryCode}&appid=${API_KEY}&units=metric`;
     }
+    
+    console.log(searchAPI+'-----'+searchParam);
+    //const apiCallByCityName=`http://api.openweathermap.org/data/2.5/weather?q=${city}`;
     const api_call=await fetch(searchAPI);
     const jsondata=await api_call.json();
     //console.log(jsondata.cod);
+    //debugger
     if (jsondata.cod!=='404' && (searchParam || (lat && long))) {
-      //console.log('inside if', this.state);
+      console.log('inside if', this.state);
       // let history;
       let history = this.state.searchHistory?this.state.searchHistory:[];
-     console.log('history', this.state.searchHistory, history);
-     if(history.length===3){
-      history.splice(0,1);
-     }
-      let data={
-        temp:jsondata.main.temp,
+      console.log('history', this.state.searchHistory, history);
+      const data={
+        tempp:jsondata.main.temp,
         city: jsondata.name
+
       }
+      console.log('heeee', data);
+      console.log('000',history);
       history.push(data);
-      console.log('heeee', history);
-      //history.push('Temp: '+jsondata.main.temp,'City: '+jsondata.name);
+      //console.log('lenth-',history.length);
+      // if(history.length>6){
+      //  history.splice(0,2);
+      // }
       //debugger
       console.log('sss--'+history);
       this.setState({
@@ -70,25 +76,25 @@ class App extends Component {
         humidity: jsondata.main.humidity,
         description: jsondata.weather[0].description,
         error: "",
-        //searchHistory: history
+        searchHistory: data
       });
-      //console.log('sss'+this.state.searchHistory);
-      localStorage.setItem('history',JSON.stringify(history));
+      console.log('sss'+this.state.searchHistory);
+      localStorage.setItem('history',this.state.searchHistory);
       //console.log('----kdokoq--',localStorage.getItem('history'));
     } else {
-      //console.log('inside else');
+      console.log('inside else');
       this.setState({
         temperature: undefined,
         city: undefined,
         country: undefined,
         humidity: undefined,
         description: undefined,
-        searchHistory:[],
         error: "Entered data is wrong. Please enter valid input."
       });
     }
   }
   render(){
+    console.log('inside render', this.state);
   return (
     <div className="App">
      <Title />
@@ -99,7 +105,7 @@ class App extends Component {
         city={this.state.city}
         country={this.state.country}
         description={this.state.description}
-        searchHistory={this.state.searchHistory}
+        //searchHistory={this.state.searchHistory}
         error={this.state.error}
       />
     </div>

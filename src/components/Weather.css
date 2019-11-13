@@ -1,0 +1,17 @@
+.hidden { display:none; }
+
+.history-section{
+    border:1px solid;
+    height: 120px;
+    width: 430px;
+    margin: 45px auto;
+    text-align: center;
+}
+.history-inner{
+    float: left;
+    padding: 10px;
+    width: 100px;
+    height: 70px;
+    border:1px solid;
+    margin:20px;
+}
