@@ -1,7 +1,7 @@
 .hidden { display:none; }
 
 .history-section{
-    border:1px solid;
+    /* border:1px solid; */
     height: 120px;
     width: 430px;
     margin: 45px auto;
